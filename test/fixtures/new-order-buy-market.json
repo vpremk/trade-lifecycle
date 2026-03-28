@@ -1,0 +1,13 @@
+{
+  "description": "New Order Single — Buy 100 AAPL at market",
+  "input": {
+    "fix": "8=FIX.4.2\u00019=148\u000135=D\u000149=CLIENT1\u000156=BROKER\u000134=1\u000152=20240328-10:00:00\u000111=ORD001\u000121=1\u000155=AAPL\u000154=1\u000138=100\u000140=1\u000160=20240328-10:00:00\u000110=128\u0001"
+  },
+  "expected": {
+    "statusCode": 200,
+    "body": {
+      "message": "received",
+      "s3KeyPattern": "^raw/.*\\.fix$"
+    }
+  }
+}

@@ -45,8 +45,11 @@ trade-lifecycle/
 │   └── ingestion/
 │       └── index.js              # Ingestion Lambda handler
 ├── test/
-│   ├── send-fix.js               # Node.js test — sends sample FIX messages
-│   └── send-fix.sh               # curl test — quick one-off FIX sends
+│   ├── features/
+│   │   └── fix-ingestion.feature # Gherkin BDD scenarios
+│   ├── fixtures/                 # One JSON per test case (input + expected)
+│   └── steps/
+│       └── fix-ingestion.steps.js # Cucumber step definitions
 ├── cdk.json                      # CDK config (app command + resource names)
 ├── sck.json                      # Placeholder resource config for local tooling
 ├── run.sh                        # End-to-end install → build → deploy script
@@ -122,31 +125,27 @@ or a raw FIX string directly.
 
 ## Testing
 
-After deploy, both scripts auto-read the endpoint from `cdk-outputs.json`.
+After deploy, tests auto-read the endpoint from `cdk-outputs.json`.
 
 ```bash
-# Node.js — sends 4 sample FIX messages (New Order, Cancel, Exec Report)
-node test/send-fix.js
-npm run test:fix         # same via npm
-
-# Raw FIX string mode (no JSON wrapper)
-node test/send-fix.js --raw
-
-# curl — quick one-liner
-./test/send-fix.sh
+npm install
+npm run test:bdd
 
 # Override endpoint manually
-API_URL=https://abc123.execute-api.us-east-1.amazonaws.com/prod node test/send-fix.js
+API_URL=https://abc123.execute-api.us-east-1.amazonaws.com/prod npm run test:bdd
 ```
 
-Sample FIX messages included:
+Fixtures in `test/fixtures/` (one JSON per scenario):
 
-| # | MsgType | Description                        |
-|---|---------|------------------------------------|
-| 1 | `35=D`  | New Order — Buy 100 AAPL market    |
-| 2 | `35=D`  | New Order — Sell 50 MSFT limit $420|
-| 3 | `35=F`  | Order Cancel Request               |
-| 4 | `35=8`  | Execution Report — partial fill    |
+| Fixture                            | MsgType | Description                         |
+|------------------------------------|---------|-------------------------------------|
+| `new-order-buy-market`             | `35=D`  | Buy 100 AAPL market                 |
+| `new-order-sell-limit`             | `35=D`  | Sell 50 MSFT limit $420             |
+| `order-cancel-request`             | `35=F`  | Cancel ORD001                       |
+| `execution-report-partial-fill`    | `35=8`  | Partial fill 40 AAPL @ $178.50      |
+| `missing-fix-body`                 | —       | Empty FIX edge case                 |
+
+To add a new test: create a fixture JSON in `test/fixtures/` and add a row to the `Examples` table in `test/features/fix-ingestion.feature`.
 
 ## Configuration
 

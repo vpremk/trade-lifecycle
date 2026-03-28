@@ -1,0 +1,13 @@
+{
+  "description": "Order Cancel Request — cancel ORD001",
+  "input": {
+    "fix": "8=FIX.4.2\u00019=130\u000135=F\u000149=CLIENT1\u000156=BROKER\u000134=3\u000152=20240328-10:02:00\u000141=ORD001\u000111=ORD003\u000155=AAPL\u000154=1\u000138=100\u000160=20240328-10:02:00\u000110=089\u0001"
+  },
+  "expected": {
+    "statusCode": 200,
+    "body": {
+      "message": "received",
+      "s3KeyPattern": "^raw/.*\\.fix$"
+    }
+  }
+}

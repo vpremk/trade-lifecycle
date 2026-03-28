@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# TypeScript build output
+dist/
+*.js.map
+*.d.ts
+
+# CDK
+cdk.out/
+cdk-outputs.json
+
+# Test reports
+test/reports/
+
+# AWS credentials / secrets
+.env
+.env.*
+*.pem
+*.key
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*

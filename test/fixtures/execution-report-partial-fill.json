@@ -1,0 +1,13 @@
+{
+  "description": "Execution Report — partial fill 40 AAPL at $178.50",
+  "input": {
+    "fix": "8=FIX.4.2\u00019=176\u000135=8\u000149=BROKER\u000156=CLIENT1\u000134=4\u000152=20240328-10:03:00\u000137=EXEC001\u000111=ORD001\u000117=FILL001\u000120=0\u000139=1\u000155=AAPL\u000154=1\u000138=100\u000132=40\u000131=178.50\u0001151=60\u000114=40\u00016=178.50\u000160=20240328-10:03:00\u000110=167\u0001"
+  },
+  "expected": {
+    "statusCode": 200,
+    "body": {
+      "message": "received",
+      "s3KeyPattern": "^raw/.*\\.fix$"
+    }
+  }
+}

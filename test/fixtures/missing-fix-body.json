@@ -1,0 +1,13 @@
+{
+  "description": "Empty body — missing FIX message",
+  "input": {
+    "fix": ""
+  },
+  "expected": {
+    "statusCode": 200,
+    "body": {
+      "message": "received",
+      "s3KeyPattern": "^raw/.*\\.fix$"
+    }
+  }
+}

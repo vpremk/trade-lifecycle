@@ -1,0 +1,8 @@
+{
+  "default": {
+    "paths":   ["test/features/**/*.feature"],
+    "require": ["test/steps/**/*.steps.js"],
+    "format":  ["progress-bar", "html:test/reports/cucumber-report.html"],
+    "parallel": 1
+  }
+}

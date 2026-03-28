@@ -14,7 +14,7 @@
 "reportsQueue": "execution-reports-queue"
 },
 "s3": {
-"rawBucket": "audit_trail"
+"rawBucket": "trade-audit-trail"
 },
 "dynamodb": {
 "ordersTable": "Orders" 
