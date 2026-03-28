@@ -1,0 +1,629 @@
+[
+  {
+    "description": "  As a trade system client\n  I want to POST FIX protocol messages to the ingestion API\n  So that they are durably stored in S3 and queued in SQS for processing",
+    "elements": [
+      {
+        "description": "",
+        "id": "fix-message-ingestion;ingest-a-valid-fix-message",
+        "keyword": "Scenario Outline",
+        "line": 20,
+        "name": "Ingest a valid FIX message",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 136125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the ingestion API endpoint is available",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:81"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 207455084
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 10,
+            "name": "the fixture file \"new-order-buy-market\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:89"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2325041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "I POST the FIX input to the ingestion API",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:95"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1012533125
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 12,
+            "name": "the response status code should be 200",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:105"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 838582
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 13,
+            "name": "the response body should contain message \"received\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:113"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1121000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the response body should contain an s3Key matching \"^raw/.*\\.fix$\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:122"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 869957
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "the FIX message should be durably stored in the audit trail",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:148"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 248767333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the response should be durably stored in the audit trail",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:129"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 98851791
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "fix-message-ingestion;ingest-a-valid-fix-message",
+        "keyword": "Scenario Outline",
+        "line": 21,
+        "name": "Ingest a valid FIX message",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 22958
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the ingestion API endpoint is available",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:81"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40928625
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 10,
+            "name": "the fixture file \"new-order-sell-limit\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:89"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1418916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "I POST the FIX input to the ingestion API",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:95"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 674256000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 12,
+            "name": "the response status code should be 200",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:105"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 650041
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 13,
+            "name": "the response body should contain message \"received\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:113"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 388082
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the response body should contain an s3Key matching \"^raw/.*\\.fix$\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:122"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 283415
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "the FIX message should be durably stored in the audit trail",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:148"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 89911791
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the response should be durably stored in the audit trail",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:129"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 83180041
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "fix-message-ingestion;ingest-a-valid-fix-message",
+        "keyword": "Scenario Outline",
+        "line": 22,
+        "name": "Ingest a valid FIX message",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 33415
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the ingestion API endpoint is available",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:81"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40747416
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 10,
+            "name": "the fixture file \"order-cancel-request\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:89"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1186000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "I POST the FIX input to the ingestion API",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:95"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 179102165
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 12,
+            "name": "the response status code should be 200",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:105"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 307957
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 13,
+            "name": "the response body should contain message \"received\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:113"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 193374
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the response body should contain an s3Key matching \"^raw/.*\\.fix$\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:122"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 130208
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "the FIX message should be durably stored in the audit trail",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:148"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 76826042
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the response should be durably stored in the audit trail",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:129"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 71435250
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "fix-message-ingestion;ingest-a-valid-fix-message",
+        "keyword": "Scenario Outline",
+        "line": 23,
+        "name": "Ingest a valid FIX message",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 62708
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the ingestion API endpoint is available",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:81"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 39939832
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 10,
+            "name": "the fixture file \"execution-report-partial-fill\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:89"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1403458
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "I POST the FIX input to the ingestion API",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:95"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 226116833
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 12,
+            "name": "the response status code should be 200",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:105"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 159333
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 13,
+            "name": "the response body should contain message \"received\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:113"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 92208
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the response body should contain an s3Key matching \"^raw/.*\\.fix$\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:122"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 87166
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "the FIX message should be durably stored in the audit trail",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:148"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 90878916
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the response should be durably stored in the audit trail",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:129"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 94676625
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "fix-message-ingestion;ingest-a-valid-fix-message",
+        "keyword": "Scenario Outline",
+        "line": 24,
+        "name": "Ingest a valid FIX message",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 47208
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the ingestion API endpoint is available",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:81"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 50733874
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 10,
+            "name": "the fixture file \"missing-fix-body\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:89"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 800666
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 11,
+            "name": "I POST the FIX input to the ingestion API",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:95"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 139732207
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 12,
+            "name": "the response status code should be 200",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:105"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 2297874,
+              "error_message": "AssertionError [ERR_ASSERTION]: Expected status 200, got 500. Body: {\"error\":\"failed to enqueue fix\"}\n\n500 !== 200\n\n    + expected - actual\n\n    -500\n    +200\n\n    at World.<anonymous> (/Users/vamsi/opensource/trade-lifecycle/test/steps/fix-ingestion.steps.js:106:10)"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 13,
+            "name": "the response body should contain message \"received\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:113"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the response body should contain an s3Key matching \"^raw/.*\\.fix$\"",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:122"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 15,
+            "name": "the FIX message should be durably stored in the audit trail",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:148"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the response should be durably stored in the audit trail",
+            "match": {
+              "location": "test/steps/fix-ingestion.steps.js:129"
+            },
+            "result": {
+              "status": "skipped",
+              "duration": 0
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "fix-message-ingestion",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "FIX Message Ingestion",
+    "tags": [],
+    "uri": "test/features/fix-ingestion.feature"
+  }
+]

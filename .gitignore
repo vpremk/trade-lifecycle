@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+.env
 
 # TypeScript build output
 dist/
@@ -10,8 +11,8 @@ dist/
 cdk.out/
 cdk-outputs.json
 
-# Test reports
-test/reports/
+# Test reports (generated HTML — keep JSON for CI diffs)
+test/reports/html/
 
 # AWS credentials / secrets
 .env

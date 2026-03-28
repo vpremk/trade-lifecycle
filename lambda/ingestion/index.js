@@ -1,6 +1,7 @@
 // Ingestion Lambda
 // - Accepts API Gateway POST with a FIX string
 // - Stores raw FIX in S3 (audit)
+// - Stores response in S3 (audit)
 // - Pushes the raw FIX string to SQS for processing
 
 const { S3Client, PutObjectCommand }    = require('@aws-sdk/client-s3');
@@ -19,7 +20,7 @@ function extractFixFromEvent(event) {
   if (typeof body === 'string') {
     try {
       const parsed = JSON.parse(body);
-      if (parsed && parsed.fix) return parsed.fix;
+      if (parsed && parsed.fix !== undefined) return parsed.fix;
       return body;
     } catch (e) {
       return body;
@@ -39,13 +40,14 @@ exports.handler = async (event) => {
   const fix = extractFixFromEvent(event) || '';
   const id  = makeId();
   const ts  = new Date().toISOString();
-  const key = `raw/${ts}-${id}.fix`;
+  const fixKey      = `raw/${ts}-${id}.fix`;
+  const responseKey = `responses/${ts}-${id}.json`;
 
   // store raw FIX in S3 for audit
   try {
     await s3.send(new PutObjectCommand({
       Bucket:      BUCKET,
-      Key:         key,
+      Key:         fixKey,
       Body:        fix,
       ContentType: 'text/plain',
     }));
@@ -61,7 +63,7 @@ exports.handler = async (event) => {
       QueueUrl:          QUEUE_URL,
       MessageBody:       encoded,
       MessageAttributes: {
-        RawKey:   { DataType: 'String', StringValue: key },
+        RawKey:   { DataType: 'String', StringValue: fixKey },
         Encoding: { DataType: 'String', StringValue: 'base64' },
       },
     }));
@@ -70,8 +72,27 @@ exports.handler = async (event) => {
     return { statusCode: 500, body: JSON.stringify({ error: 'failed to enqueue fix' }) };
   }
 
-  return {
+  const response = {
     statusCode: 200,
-    body: JSON.stringify({ message: 'received', s3Key: key }),
+    body: JSON.stringify({ message: 'received', s3Key: fixKey, responseKey }),
   };
+
+  // store response in S3 for audit
+  try {
+    await s3.send(new PutObjectCommand({
+      Bucket:      BUCKET,
+      Key:         responseKey,
+      Body:        response.body,
+      ContentType: 'application/json',
+      Metadata: {
+        fixKey,
+        statusCode: String(response.statusCode),
+      },
+    }));
+  } catch (err) {
+    console.error('S3 PutObject (response) error', err);
+    // non-fatal — request was already processed, log and continue
+  }
+
+  return response;
 };

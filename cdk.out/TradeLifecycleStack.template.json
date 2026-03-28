@@ -200,7 +200,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-988745870915-us-east-1",
-     "S3Key": "6f6ccf0ae916f7e922ee338ab284441af02a5e092a52899a7eb2ff7a45e96829.zip"
+     "S3Key": "acee523f9d3f2ae9bb966c998e57fb9dd77b78c76dcf2795ecd54094f29912f5.zip"
     },
     "Environment": {
      "Variables": {
@@ -232,7 +232,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "TradeLifecycleStack/IngestionLambda/Resource",
-    "aws:asset:path": "asset.6f6ccf0ae916f7e922ee338ab284441af02a5e092a52899a7eb2ff7a45e96829",
+    "aws:asset:path": "asset.acee523f9d3f2ae9bb966c998e57fb9dd77b78c76dcf2795ecd54094f29912f5",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }

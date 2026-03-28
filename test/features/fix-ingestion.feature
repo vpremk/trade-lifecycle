@@ -12,6 +12,8 @@ Feature: FIX Message Ingestion
     Then the response status code should be <statusCode>
     And the response body should contain message "<message>"
     And the response body should contain an s3Key matching "<s3KeyPattern>"
+    And the FIX message should be durably stored in the audit trail
+    And the response should be durably stored in the audit trail
 
     Examples:
       | fixture                          | statusCode | message  | s3KeyPattern     |
