@@ -1,0 +1,24 @@
+{
+"app": "npx ts-node --prefer-ts-exts bin/trade-lifecycle.ts",
+"version": "0.1",
+"name": "trade-lifecycle-skeleton-config",
+"description": "Skeleton sck.json for project-level quick config and placeholders",
+"environment": {
+"account":"988745870915", 
+"region": "us-east-1",
+"stage": "dev"
+},
+"resources": {
+"sqs": {
+"fixQueue": "fix-orders-queue",
+"reportsQueue": "execution-reports-queue"
+},
+"s3": {
+"rawBucket": "audit_trail"
+},
+"dynamodb": {
+"ordersTable": "Orders" 
+}
+},
+"notes": "Replace placeholder names with deployed resource names as needed for local tooling or scripts."
+}

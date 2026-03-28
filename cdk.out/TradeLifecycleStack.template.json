@@ -1,0 +1,659 @@
+{
+ "Resources": {
+  "FixOrdersQueue3C82D8E4": {
+   "Type": "AWS::SQS::Queue",
+   "Properties": {
+    "MessageRetentionPeriod": 345600,
+    "QueueName": "fix-orders-queue",
+    "VisibilityTimeout": 30
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/FixOrdersQueue/Resource"
+   }
+  },
+  "ExecutionReportsQueue9853EC9E": {
+   "Type": "AWS::SQS::Queue",
+   "Properties": {
+    "MessageRetentionPeriod": 345600,
+    "QueueName": "execution-reports-queue",
+    "VisibilityTimeout": 30
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/ExecutionReportsQueue/Resource"
+   }
+  },
+  "AuditTrailBucket677225EC": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketName": "audit-trail-988745870915-us-east-1",
+    "LifecycleConfiguration": {
+     "Rules": [
+      {
+       "Status": "Enabled",
+       "Transitions": [
+        {
+         "StorageClass": "STANDARD_IA",
+         "TransitionInDays": 30
+        }
+       ]
+      }
+     ]
+    },
+    "VersioningConfiguration": {
+     "Status": "Enabled"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/AuditTrailBucket/Resource"
+   }
+  },
+  "OrdersTable315BB997": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "orderId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "timestamp",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "orderId",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "timestamp",
+      "KeyType": "RANGE"
+     }
+    ],
+    "TableName": "Orders"
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/OrdersTable/Resource"
+   }
+  },
+  "IngestionLambdaServiceRole447B9B96": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/IngestionLambda/ServiceRole/Resource"
+   }
+  },
+  "IngestionLambdaServiceRoleDefaultPolicyD3A17461": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging",
+        "s3:Abort*"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          {
+           "Fn::GetAtt": [
+            "AuditTrailBucket677225EC",
+            "Arn"
+           ]
+          },
+          "/*"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": [
+        "sqs:SendMessage",
+        "sqs:GetQueueAttributes",
+        "sqs:GetQueueUrl"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "FixOrdersQueue3C82D8E4",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "dynamodb:BatchWriteItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "OrdersTable315BB997",
+          "Arn"
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "IngestionLambdaServiceRoleDefaultPolicyD3A17461",
+    "Roles": [
+     {
+      "Ref": "IngestionLambdaServiceRole447B9B96"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/IngestionLambda/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "IngestionLambdaEF25F265": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-988745870915-us-east-1",
+     "S3Key": "46d7ce268dbcdad6da9e0135deefa8c765a4308ca1119e0dffc6306d9369e6cb.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "FIX_QUEUE_URL": {
+       "Ref": "FixOrdersQueue3C82D8E4"
+      },
+      "RAW_BUCKET": {
+       "Ref": "AuditTrailBucket677225EC"
+      },
+      "ORDERS_TABLE": {
+       "Ref": "OrdersTable315BB997"
+      }
+     }
+    },
+    "FunctionName": "trade-lifecycle-ingestion",
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "IngestionLambdaServiceRole447B9B96",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 15
+   },
+   "DependsOn": [
+    "IngestionLambdaServiceRoleDefaultPolicyD3A17461",
+    "IngestionLambdaServiceRole447B9B96"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/IngestionLambda/Resource",
+    "aws:asset:path": "asset.46d7ce268dbcdad6da9e0135deefa8c765a4308ca1119e0dffc6306d9369e6cb",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "TradeLifecycleApi38097DA5": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "Trade Lifecycle ingestion endpoint",
+    "Name": "trade-lifecycle-api"
+   },
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/TradeLifecycleApi/Resource"
+   }
+  },
+  "TradeLifecycleApiCloudWatchRole494280EF": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "apigateway.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+       ]
+      ]
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/TradeLifecycleApi/CloudWatchRole/Resource"
+   }
+  },
+  "TradeLifecycleApiAccount54D37C03": {
+   "Type": "AWS::ApiGateway::Account",
+   "Properties": {
+    "CloudWatchRoleArn": {
+     "Fn::GetAtt": [
+      "TradeLifecycleApiCloudWatchRole494280EF",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "TradeLifecycleApi38097DA5"
+   ],
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/TradeLifecycleApi/Account"
+   }
+  },
+  "TradeLifecycleApiDeploymentCF4CCAE5a2c9374592fc94434e506f1cd62178da": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "Trade Lifecycle ingestion endpoint",
+    "RestApiId": {
+     "Ref": "TradeLifecycleApi38097DA5"
+    }
+   },
+   "DependsOn": [
+    "TradeLifecycleApiingestOPTIONS7FAD4542",
+    "TradeLifecycleApiingestPOST0C604AE1",
+    "TradeLifecycleApiingest8EBC0BEC",
+    "TradeLifecycleApiOPTIONS8950A597"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/TradeLifecycleApi/Deployment/Resource",
+    "aws:cdk:do-not-refactor": true
+   }
+  },
+  "TradeLifecycleApiDeploymentStageprodD4CB11EF": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "TradeLifecycleApiDeploymentCF4CCAE5a2c9374592fc94434e506f1cd62178da"
+    },
+    "RestApiId": {
+     "Ref": "TradeLifecycleApi38097DA5"
+    },
+    "StageName": "prod"
+   },
+   "DependsOn": [
+    "TradeLifecycleApiAccount54D37C03"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/TradeLifecycleApi/DeploymentStage.prod/Resource"
+   }
+  },
+  "TradeLifecycleApiOPTIONS8950A597": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "TradeLifecycleApi38097DA5",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "TradeLifecycleApi38097DA5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/TradeLifecycleApi/Default/OPTIONS/Resource"
+   }
+  },
+  "TradeLifecycleApiingest8EBC0BEC": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "TradeLifecycleApi38097DA5",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "ingest",
+    "RestApiId": {
+     "Ref": "TradeLifecycleApi38097DA5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/TradeLifecycleApi/Default/ingest/Resource"
+   }
+  },
+  "TradeLifecycleApiingestOPTIONS7FAD4542": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'POST,OPTIONS'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "TradeLifecycleApiingest8EBC0BEC"
+    },
+    "RestApiId": {
+     "Ref": "TradeLifecycleApi38097DA5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/TradeLifecycleApi/Default/ingest/OPTIONS/Resource"
+   }
+  },
+  "TradeLifecycleApiingestPOSTApiPermissionTradeLifecycleStackTradeLifecycleApi5450F836POSTingestF3446668": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "IngestionLambdaEF25F265",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:988745870915:",
+       {
+        "Ref": "TradeLifecycleApi38097DA5"
+       },
+       "/",
+       {
+        "Ref": "TradeLifecycleApiDeploymentStageprodD4CB11EF"
+       },
+       "/POST/ingest"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/TradeLifecycleApi/Default/ingest/POST/ApiPermission.TradeLifecycleStackTradeLifecycleApi5450F836.POST..ingest"
+   }
+  },
+  "TradeLifecycleApiingestPOSTApiPermissionTestTradeLifecycleStackTradeLifecycleApi5450F836POSTingest99D3403D": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "IngestionLambdaEF25F265",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-1:988745870915:",
+       {
+        "Ref": "TradeLifecycleApi38097DA5"
+       },
+       "/test-invoke-stage/POST/ingest"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/TradeLifecycleApi/Default/ingest/POST/ApiPermission.Test.TradeLifecycleStackTradeLifecycleApi5450F836.POST..ingest"
+   }
+  },
+  "TradeLifecycleApiingestPOST0C604AE1": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "IngestionLambdaEF25F265",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "TradeLifecycleApiingest8EBC0BEC"
+    },
+    "RestApiId": {
+     "Ref": "TradeLifecycleApi38097DA5"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/TradeLifecycleApi/Default/ingest/POST/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02Q3VLDIBCFn8V7gk5sHyDV8a5jW73vbGCNNAFiFuxkGN5dIHHaq/Oxu2d/qHm92fKnB7hSJWRfDarl4cOB6FkKnQP9EA9Hjx7Zy5cpEBk987DzokeXgystsgNKBXI2oK1MrT6hHYq1QGQD6FYCD2/eCKesyal7PuCkFVF6RaZA83Cyi7/owQ5KzKWuUF7lDEToiDdZGIyqA4dXmJMVyTWjKu4bNkJYbxx7xXGws0ZTjrh7peu7MnKBZLV+EpgvY3t031bm5Er/2XVI4Rhv4bJVbqRMl2vevRu9i8xYifxCj7/1luf/v5BS1ZT2Uhr5adE/boJAA5wBAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "TradeLifecycleStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "TradeLifecycleApiEndpointE41CBBD3": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "TradeLifecycleApi38097DA5"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "TradeLifecycleApiDeploymentStageprodD4CB11EF"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "ApiEndpoint": {
+   "Description": "API Gateway endpoint URL",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "TradeLifecycleApi38097DA5"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "TradeLifecycleApiDeploymentStageprodD4CB11EF"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "AuditBucketName": {
+   "Description": "S3 audit trail bucket name",
+   "Value": {
+    "Ref": "AuditTrailBucket677225EC"
+   }
+  },
+  "FixQueueUrl": {
+   "Description": "SQS FIX orders queue URL",
+   "Value": {
+    "Ref": "FixOrdersQueue3C82D8E4"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

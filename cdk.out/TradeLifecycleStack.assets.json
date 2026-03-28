@@ -1,0 +1,36 @@
+{
+  "version": "53.0.0",
+  "files": {
+    "46d7ce268dbcdad6da9e0135deefa8c765a4308ca1119e0dffc6306d9369e6cb": {
+      "displayName": "IngestionLambda/Code",
+      "source": {
+        "path": "asset.46d7ce268dbcdad6da9e0135deefa8c765a4308ca1119e0dffc6306d9369e6cb",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "988745870915-us-east-1-0fe1a646": {
+          "bucketName": "cdk-hnb659fds-assets-988745870915-us-east-1",
+          "objectKey": "46d7ce268dbcdad6da9e0135deefa8c765a4308ca1119e0dffc6306d9369e6cb.zip",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::988745870915:role/cdk-hnb659fds-file-publishing-role-988745870915-us-east-1"
+        }
+      }
+    },
+    "49e2ae27475ef32fd4acbe5052b15d1da3e1e849a3e1df6f3fbf7e35da5b6a14": {
+      "displayName": "TradeLifecycleStack Template",
+      "source": {
+        "path": "TradeLifecycleStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "988745870915-us-east-1-d6c9dd49": {
+          "bucketName": "cdk-hnb659fds-assets-988745870915-us-east-1",
+          "objectKey": "49e2ae27475ef32fd4acbe5052b15d1da3e1e849a3e1df6f3fbf7e35da5b6a14.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::988745870915:role/cdk-hnb659fds-file-publishing-role-988745870915-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

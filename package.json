@@ -1,0 +1,23 @@
+{
+  "name": "trade-lifecycle-cdk",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk",
+    "synth": "cdk synth",
+    "deploy": "cdk deploy --all",
+    "test:fix": "node test/send-fix.js"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "aws-cdk-lib": "^2.90.0",
+    "constructs": "^10.0.0",
+    "typescript": "^4.9.0",
+    "ts-node": "^10.9.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

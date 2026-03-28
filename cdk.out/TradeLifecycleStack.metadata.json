@@ -1,0 +1,160 @@
+{
+  "/TradeLifecycleStack/OrdersTable": [
+    {
+      "type": "aws:cdk:hasPhysicalName",
+      "data": {
+        "Ref": "OrdersTable315BB997"
+      }
+    }
+  ],
+  "/TradeLifecycleStack/ApiEndpoint": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ApiEndpoint"
+    }
+  ],
+  "/TradeLifecycleStack/AuditBucketName": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AuditBucketName"
+    }
+  ],
+  "/TradeLifecycleStack/FixQueueUrl": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "FixQueueUrl"
+    }
+  ],
+  "/TradeLifecycleStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    }
+  ],
+  "/TradeLifecycleStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    }
+  ],
+  "/TradeLifecycleStack/FixOrdersQueue/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "FixOrdersQueue3C82D8E4"
+    }
+  ],
+  "/TradeLifecycleStack/ExecutionReportsQueue/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExecutionReportsQueue9853EC9E"
+    }
+  ],
+  "/TradeLifecycleStack/AuditTrailBucket/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AuditTrailBucket677225EC"
+    }
+  ],
+  "/TradeLifecycleStack/OrdersTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "OrdersTable315BB997"
+    }
+  ],
+  "/TradeLifecycleStack/IngestionLambda/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "IngestionLambdaEF25F265"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApi38097DA5"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/Account": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApiAccount54D37C03"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/Endpoint": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApiEndpointE41CBBD3"
+    }
+  ],
+  "/TradeLifecycleStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    }
+  ],
+  "/TradeLifecycleStack/IngestionLambda/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "IngestionLambdaServiceRole447B9B96"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/CloudWatchRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApiCloudWatchRole494280EF"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/Deployment/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApiDeploymentCF4CCAE5a2c9374592fc94434e506f1cd62178da"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/DeploymentStage.prod/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApiDeploymentStageprodD4CB11EF"
+    }
+  ],
+  "/TradeLifecycleStack/IngestionLambda/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "IngestionLambdaServiceRoleDefaultPolicyD3A17461"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/Default/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApiOPTIONS8950A597"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/Default/ingest/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApiingest8EBC0BEC"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/Default/ingest/OPTIONS/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApiingestOPTIONS7FAD4542"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/Default/ingest/POST/ApiPermission.TradeLifecycleStackTradeLifecycleApi5450F836.POST..ingest": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApiingestPOSTApiPermissionTradeLifecycleStackTradeLifecycleApi5450F836POSTingestF3446668"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/Default/ingest/POST/ApiPermission.Test.TradeLifecycleStackTradeLifecycleApi5450F836.POST..ingest": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApiingestPOSTApiPermissionTestTradeLifecycleStackTradeLifecycleApi5450F836POSTingest99D3403D"
+    }
+  ],
+  "/TradeLifecycleStack/TradeLifecycleApi/Default/ingest/POST/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TradeLifecycleApiingestPOST0C604AE1"
+    }
+  ]
+}

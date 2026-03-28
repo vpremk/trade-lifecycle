@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod +x /Users/vamsi/opensource/trade-lifecycle/run.sh)",
+      "Bash(aws configure:*)",
+      "Read(//Users/vamsi/.aws/**)",
+      "Bash(chmod +x /Users/vamsi/opensource/trade-lifecycle/test/send-fix.sh)"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "version": "0.1",
+  "name": "trade-lifecycle-skeleton-config",
+  "description": "Skeleton sck.json for project-level quick config and placeholders",
+  "environment": {
+    "region": "us-east-1",
+    "stage": "dev"
+  },
+  "resources": {
+    "sqs": {
+      "fixQueue": "fix-orders-queue",
+      "reportsQueue": "execution-reports-queue"
+    },
+    "s3": {
+      "rawBucket": "REPLACE_WITH_BUCKET_NAME"
+    },
+    "dynamodb": {
+      "ordersTable": "Orders"
+    }
+  },
+  "notes": "Replace placeholder names with deployed resource names as needed for local tooling or scripts."
+}
